@@ -19,11 +19,13 @@
             <span aria-hidden="true">&times;</span>
         </button>
         {{ mess }}
+        
     </div>
 
     {% endfor %}
 
     <form method="POST">
+        {{form.breed.label}}{{ form.breed }}
         {{ form.hidden_tag() }}
         {{ form.submit() }}
     </form>
