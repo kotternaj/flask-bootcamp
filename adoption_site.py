@@ -1,5 +1,5 @@
 import os
-from forms import AddForm, DelForm
+from forms import AddForm, DelForm, AddOwnerForm
 
 from flask import Flask, render_template, url_for, redirect
 from flask_sqlalchemy import SQLAlchemy 
@@ -23,12 +23,29 @@ class Puppy(db.Model):
     __tablename__ = 'puppies'
     id = db.Column(db.Integer,primary_key=True)
     name = db.Column(db.Text)
+    owner = db.relationship('Owner', backref='puppy', uselist=False)
 
     def __init__(self,name):
         self.name = name
 
     def __repr__(self):
-        return f"Puppy name: {self.name}"
+        if self.owner:
+            return f"Puppy name is {self.name} and owner is {self.owner.name}"
+        else: 
+            return f"Puppy name: {self.name} and assigned no owner yet"
+
+class Owner(db.Model):
+    __tablename__ = 'owner'
+    id = db.Column(db.Integer,primary_key=True)
+    name = db.Column(db.Text)
+    puppy_id = db.Column(db.Integer,db.ForeignKey('puppies.id'))
+
+    def __init__(self,name, puppy_id):
+        self.name = name
+        self.puppy_id = puppy_id
+    
+    def __repr__(self):
+        return f"Owner name: {self.name}"
 
 ## VIEWS ## 
 
@@ -51,6 +68,22 @@ def add_pup():
         return redirect(url_for('list_pup'))
 
     return render_template('add.html', form=form)
+
+@app.route('/addOwner', methods=['GET','POST'])
+def add_owner():
+    form = AddOwnerForm()
+
+    if form.validate_on_submit():
+        name = form.name.data
+        pup_id = form.pup_id.data
+
+        # Add owner
+        new_owner = Owner(name, pup_id)
+        db.session.add(new_owner)
+        db.session.commit()
+        
+        return redirect(url_for('list_pup'))
+    return render_template('addOwner.html', form=form)
 
 @app.route('/list')
 def list_pup():
