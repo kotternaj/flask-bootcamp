@@ -8,7 +8,7 @@ class AddForm(FlaskForm):
 
 class DelForm(FlaskForm):
 
-    id = IntegerField('Id Number of Puppy to Remove:')
+    id = IntegerField('ID # of Puppy to Remove:')
     submit = SubmitField('Remove Puppy') 
 
     

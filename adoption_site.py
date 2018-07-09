@@ -38,16 +38,15 @@ def index():
 
 @app.route('/add', methods=['GET','POST'])
 def add_pup():
-
     form = AddForm()
 
-    if validate_on_submit:
+    if form.validate_on_submit():
         name = form.name.data 
         
         # Add puppy to db
         new_pup = Puppy(name)
         db.session.add(new_pup)
-        db.session.commmit()
+        db.session.commit()
 
         return redirect(url_for('list_pup'))
 
