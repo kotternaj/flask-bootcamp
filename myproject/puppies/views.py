@@ -7,7 +7,7 @@ puppies_blueprints = Blueprint('puppies',__name__,
                               template_folder='templates/puppies')
 
 @puppies_blueprints.route('/add', methods=['GET','POST'])
-def add():
+def add_pup():
     form = AddForm()
 
     if form.validate_on_submit():
@@ -18,7 +18,7 @@ def add():
         db.session.add(new_pup)
         db.session.commit()
 
-        return redirect(url_for('puppies.list'))
+        return redirect(url_for('puppies.list_pup'))
 
     return render_template('add.html', form=form)
 
@@ -39,5 +39,5 @@ def del_pup():
         db.session.delete(pup)
         db.session.commit()
 
-        return redirect(url_for('puppies.list'))
+        return redirect(url_for('puppies.list_pup'))
     return render_template('delete.html',form=form)
