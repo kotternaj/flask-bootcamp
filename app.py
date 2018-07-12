@@ -1,12 +1,12 @@
 from myproject2 import app, db
-from flask import (render_template, render_template,
+from flask import (render_template,
                    redirect, request, url_for, flash, abort)
 from flask_login import login_user, login_required, logout_user
 from myproject2.models import User
 from myproject2.forms import RegistrationForm, LoginForm
 
 @app.route('/')
-def index():
+def home():
     return render_template('home.html')
 
 @app.route('/welcome')
@@ -26,18 +26,18 @@ def login():
 
     form = LoginForm()
     if form.validate_on_submit():
-        user = User.query.filter(email=form.email.data).first()
+        user = User.query.filter_by(email=form.email.data).first()
 
-        if user.check_password(form.password.data) and user is not none:
+        if user.check_password(form.password.data) and user is not None:
             login_user(user)
             flash('Logged in success!')
 
-            next.request.args.get('next')
+            next = request.args.get('next')
             if next == None or not next[0]=='/':
                 next = url_for('welcome_user')
             return redirect(next)
         
-     return render_template('login.html', form=form)
+    return render_template('login.html', form=form)
 
 @app.route('/register', methods=['GET','POST'])
 def register():
