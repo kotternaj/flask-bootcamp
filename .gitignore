@@ -3,3 +3,5 @@ data.sqlite
 migrations/
 migrationsOLD/
 migrationsOLD2/
+.vscode/
+myproject2/__init__.pyc
