@@ -6,20 +6,21 @@ connection_pool = pool.SimpleConnectionPool(1 ,5,
                                             database='learning',
                                             host='localhost')
 
-class ConnectionFromPool: 
+class CursorFromConnectionFromPool: 
     def __init__(self):
         self.connection = None
+        self.cursor = None
 
     def __enter__(self):
         self.connection = connection_pool.getconn()
-        return self.connection
+        self.cursor = self.connection.cursor()
+        return self.cursor
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        self.connection_pool.putconn()
-
-
-
-# just an example, this is how we could access this connection from here
-cp = ConnectionPool()
-cp.connection_pool
+    def __exit__(self, exception_type, exception_val, exception_tb):
+        if exception_val is not None:
+            self.connection.rollback()
+        else:
+            self.cursor.close()
+            self.connection.commit()
+        connection_pool.putconn(self.connection)
 
