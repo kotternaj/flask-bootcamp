@@ -1,7 +1,7 @@
 from user import User
 from database import Database
 
-Database.initialize()
+Database.initialize(user='postgres', password='1234',database='learning', host='localhost')
 
 user = User('teom@smith.com', 'Rolf', 'Smith', None)
 
