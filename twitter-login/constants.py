@@ -1,5 +1,5 @@
-CONSUMER_KEY = '6rMEPcsKZDNpNxKsY6hfNl6PY'
-CONSUMER_SECRET = '3B2V3xiYA2q0MQmPsuDQwCPdWqZccJiHlpC45dI07i8ulJMehh'
+CONSUMER_KEY = 'FFwU0lPQckn7dqIjJcv4HpNJ4'
+CONSUMER_SECRET = 'sbQL3swAaSeLqM1WP9QgtbTnPfaqSYK8rMaqLs9dxdrBbrELLE'
 
 REQUEST_TOKEN_URL = 'https://api.twitter.com/oauth/request_token'
 ACCESS_TOKEN_URL = 'https://api.twitter.com/oauth/access_token'

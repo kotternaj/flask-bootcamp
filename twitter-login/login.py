@@ -1,28 +1,26 @@
-from user import User
-from database import Database
-from twitter_utils import get_request_token, get_oauth_verifier, get_access_token
+import constants
+import oauth2
+import urllib.parse as urlparse
 
-Database.initialise(user='postgres', password='1234', host='localhost', database='learning')
+consumer = oauth2.Consumer(constants.CONSUMER_KEY, constants.CONSUMER_SECRET)
+client = oauth2.Client(consumer)
 
-user_email = input("Enter your e-mail address: ")
+response, content = client.request(constants.REQUEST_TOKEN_URL, 'POST')
+if response.status != 200:
+    print('An error occurred getting the request token from Twitter!')
 
-user = User.load_from_db_by_email(user_email)
+request_token = dict(urlparse.parse_qsl(content.decode('utf-8')))
 
-if not user:
-    request_token = get_request_token()
+print ("Go to the following site in your browser:")
+print ("{}?oauth_token={}".format(constants.AUTHORIZATION_URL))
 
-    oauth_verifier = get_oauth_verifier(request_token)
+oath_verifier = input('What is the PIN? ')
 
-    access_token = get_access_token(request_token, oauth_verifier)
+token = oauth2.Token(request_token['oauth_token'], request_token['oauth_token_secret'])
+token.set_verifier(oauth_verifier)
+client = oauth2.Client(consumer, token)
 
-    first_name = input("Enter your first name: ")
-    last_name = input("Enter your last name: ")
+response, content = client.request(constants.ACCESS_TOKEN_URL, 'POST')
+access_token = dict(urlparse.parse_qsl(content.decode('utf-8')))
 
-    user = User(user_email, first_name, last_name, access_token['oauth_token'], access_token['oauth_token_secret'], None)
-    user.save_to_db()
-
-
-tweets = user.twitter_request('https://api.twitter.com/1.1/search/tweets.json?q=computers+filter:images')
-
-for tweet in tweets['statuses']:
-    print(tweet['text'])
+print(access_token)
