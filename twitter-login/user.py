@@ -7,7 +7,7 @@ class User():
         self.first_name = first_name
         self.last_name = last_name
         self.oauth_token = oauth_token
-        self.oauth_token_secret
+        self.oauth_token_secret = oauth_token_secret
         self.id = id
 
     def __repr__(self):
@@ -15,7 +15,7 @@ class User():
     
     def save_to_db(self):
         with CursorFromConnectionFromPool() as cursor:
-            cursor.execute('INSERT INTO users(email, first_name, last_name) VALUES (%s, %s, %s, %s, %s)',
+            cursor.execute('INSERT INTO users(email, first_name, last_name, oauth_token, oauth_token_secret) VALUES (%s, %s, %s, %s, %s)',
                            (self.email, self.first_name, self.last_name, self.oauth_token, self.oauth_token_secret))
         
 

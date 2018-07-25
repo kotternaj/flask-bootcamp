@@ -27,7 +27,7 @@ class CursorFromConnectionFromPool:
         self.cursor = None
 
     def __enter__(self):
-        self.connection = Database.get_connection.getconn()
+        self.connection = Database.get_connection()
         self.cursor = self.connection.cursor()
         return self.cursor
 
@@ -37,5 +37,5 @@ class CursorFromConnectionFromPool:
         else:
             self.cursor.close()
             self.connection.commit()
-        Database.return___connection_pool.putconn(self.connection)
+        Database.return_connection(self.connection)
 
