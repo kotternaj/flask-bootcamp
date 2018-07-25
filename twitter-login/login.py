@@ -17,6 +17,7 @@ print ("{}?oauth_token={}".format(constants.AUTHORIZATION_URL))
 
 oath_verifier = input('What is the PIN? ')
 
+
 token = oauth2.Token(request_token['oauth_token'], request_token['oauth_token_secret'])
 token.set_verifier(oauth_verifier)
 client = oauth2.Client(consumer, token)
@@ -32,8 +33,7 @@ authorized_token = oauth2.Token(access_token['oauth_token'], access_token['oauth
 authorized_client = oauth2.Client(consume, authorized_token)
 
 # Make Twitter API calls!
-response, content = authorized_client.request
-                 ('https://api.twitter.com/1.1/search/tweets.json?q=computers+filter:images', 'GET')
+response, content = authorized_client.request('https://api.twitter.com/1.1/search/tweets.json?q=computers+filter:images', 'GET')
 if response.status !=200:
     print('An error occurred when searching!')
 
