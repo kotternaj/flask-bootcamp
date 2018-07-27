@@ -1,27 +1,21 @@
-from user import User
-from database import Database
-from twitter_utils import get_request_token, get_oauth_verifier, get_access_token
+from flask import Flask, render_template, session, redirect
+from twitter_utils import get_request_token, get_oauth_verifier_url
 
-Database.initialize(user='postgres', password='1234',database='learning', host='localhost')
+app = Flask(__name__)
+app.secret_key = '1234'
 
-user_email= input('What is your email address?')
+@app.route('/')
+def homepage():
+    return render_template('home.html')
 
-user = User.load_from_db_by_email(user_email)
-
-if not user:
+@app.route('/login/twitter')
+def twitter_login():
     request_token = get_request_token()
-    oauth_verifier = get_oauth_verifier(request_token)
-    access_token = get_access_token(request_token, oauth_verifier)
+    session['request_token'] = request_token
+    # redirecting the user to Twitter so they can confirm authorization
+    return redirect(get_oauth_verifier_url(request_token))
 
-    first_name = input("What is your first name?")
-    last_name = input("What is your last name?")
+app.run(port=5001, debug=True)
 
-    user = User(user_email, first_name, last_name, access_token[oauth_token], access_token[oauth_token_secret], None)
-    user.save_to_db()
-
-tweets = user.twitter_request('https://api.twitter.com/1.1/search/tweets.json?q=computers+filter:images')
-
-for tweet in tweets['statuses']:
-    print(tweet['text'])
 
     

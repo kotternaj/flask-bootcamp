@@ -4,7 +4,7 @@ import urllib.parse as urlparse
 
 consumer = oauth2.Consumer(constants.CONSUMER_KEY, constants.CONSUMER_SECRET)
 
-def get_request_token(self):
+def get_request_token():
     # Create a consumer, which uses CONSUMER_KEY and CONSUMER_SECRET to identify our app uniquely    
     client = oauth2.Client(consumer)
     
@@ -19,7 +19,11 @@ def get_request_token(self):
 def get_oauth_verifier():
     # Ask the user to authorize our app and give us the PIN code
     print ("Go to the following site in your browser:")
-    print ("{}?oauth_token={}".format(constants.AUTHORIZATION_URL, request_token['oauth_token']))
+    print (get_oauth_verifier_url(request_token))
+
+def get_oauth_verifier_url(request_token):
+    return "{}?oauth_token={}".format(constants.AUTHORIZATION_URL, request_token['oauth_token'])
+
 
 def get_access_token(request_token, oauth_verifier):
     # Create a token object which contains the request token, and the verifier
