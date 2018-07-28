@@ -26,7 +26,7 @@ class User():
         with CursorFromConnectionFromPool() as cursor: 
             cursor.execute('SELECT * FROM users WHERE screen_name=%s', (screen_name,))
             user_data = cursor.fetchone()
-            if user_data: # AKA if user_data is Not None AKA if user_data exists
+            if not user: # AKA if user does not exist
                 return cls(screen_name=user_data[1], oauth_token=user_data[2],
                                 oauth_token_secret=user_data[3],id=user_data[0])
     
