@@ -6,7 +6,12 @@ from database import Database
 app = Flask(__name__)
 app.secret_key = '1234'
 
-database = Database.initialize(host='localhost', database='learning', user='postgres', password='1234')
+Database.initialize(host='localhost', database='learning', user='postgres', password='1234')
+
+@app.before_request
+def load_user():
+    if 'screen_name' in session:
+        g.user = User.load_from_db_by_screen_name(session['screen_name'])
 
 @app.route('/')
 def homepage():
@@ -18,6 +23,11 @@ def twitter_login():
     session['request_token'] = request_token
     # redirecting the user to Twitter so they can confirm authorization
     return redirect(get_oauth_verifier_url(request_token))
+
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect(url_for('homepage'))
 
 @app.route('/auth/twitter')
 def twitter_auth():
@@ -34,9 +44,9 @@ def twitter_auth():
 
     return redirect(url_for('profile'))
 
-@app.route('profile')
+@app.route('/profile')
 def profile():
-    return render_template('profile.html', screen_name=session['screen_name'])
+    return render_template('profile.html', user = g.user)
 
 app.run(port=5001, debug=True)
 
