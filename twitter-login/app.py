@@ -1,4 +1,4 @@
-from flask import Flask, render_template, session, redirect, url_for
+from flask import Flask, render_template, session, redirect, url_for, g
 from twitter_utils import get_request_token, get_oauth_verifier_url
 from user import User
 from database import Database
@@ -48,7 +48,13 @@ def twitter_auth():
 
 @app.route('/profile')
 def profile():
-    return render_template('profile.html', user = g.user)
+    return render_template('profile.html', user=g.user)
+
+@app.route('/search')
+def search():
+    tweets = g.user.twitter_request('https://api.twitter.com/1.1/search/tweets.json?q=computers+filter:images')
+    tweet_texts = [tweet['text'] for tweet in tweets['statuses']]
+    return render_template('search.html', content=tweet_texts)      
 
 app.run(port=5001, debug=True)
 
