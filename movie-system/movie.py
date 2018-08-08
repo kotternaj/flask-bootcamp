@@ -3,4 +3,6 @@ class Movie:
         self.name = name
         self.genre = genre
 
-        
+
+    def __init__(self):
+        return "<User {}>".format(self.name)
