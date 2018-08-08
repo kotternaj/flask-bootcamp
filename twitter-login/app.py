@@ -1,3 +1,4 @@
+import requests
 from flask import Flask, render_template, session, redirect, url_for, g, request
 from twitter_utils import get_request_token, get_oauth_verifier_url, get_access_token
 from user import User
