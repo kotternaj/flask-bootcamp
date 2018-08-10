@@ -1,7 +1,12 @@
-
 from user import User 
 
-user = User.load_from_file('John.txt')
+user = User('John')
 
-print(user.movies)
+user.add_movie('The matrix', 'Sci-Fi')
+user.add_movie('The Interview', 'Comedy')
+
+print(user.json())
+
+with open('my_file.txt', 'w') as f:
+    json.dump(user.json(), f)
 
